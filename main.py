@@ -120,7 +120,7 @@ def main():
         images.append(Photo((portraits[i].index, portraits[i+1].index), True,
             (portraits[i].data, portraits[i+1].data)))
 
-    # shuffle(images)
+    shuffle(images)
     chunk_size = len(images) // chunk_count
 
     print(chunk_count, chunk_size)
