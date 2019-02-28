@@ -1,3 +1,4 @@
+import sys
 import fileinput
 from pprint import pprint
 from tqdm import tqdm
@@ -6,7 +7,7 @@ from random import shuffle
 
 
 def parse():
-    lines = [line.strip() for line in fileinput.input()]
+    lines = [line.strip() for line in open(sys.argv[1]).readlines()]
     count = int(lines[0])
     lines = lines[1:]
 
@@ -109,11 +110,10 @@ def link_chunks(chunk, distances):
         # print(distances.distances)
         pos = distances.get_max_distance()
         sorted_images.append(pos)
-        print(pos, distances.get_distance(*pos))
         distances.remove_couple(*pos)
 
     mark = {i for i in range(len(chunk))}
-    
+
     for i in range(len(sorted_images)):
         mark.remove(sorted_images[i][1])
 
@@ -122,7 +122,7 @@ def link_chunks(chunk, distances):
 
     pos_in = {a: i for i, (a,b) in enumerate(sorted_images)}
     pos_dest = {b: i for i, (a,b) in enumerate(sorted_images)}
-    
+
     res = []
     res.append(entry_point)
     for i in range(len(sorted_images)):
@@ -131,9 +131,6 @@ def link_chunks(chunk, distances):
             res.append(entry_point)
         except KeyError:
             break
-
-    print(len(res), 'len')
-    print(res)
 
     return res
 
@@ -160,10 +157,15 @@ def main():
 
     assert(len(images) == sum(len(chunk) for chunk in chunks))
 
+
     print('Computing distances')
+    f = open(f'{sys.argv[1]}.out', 'w+')
+    f.write(f'{len(images)}\n')
     for chunk in tqdm(chunks):
         distances = compute_distances(chunk)
-        link_chunks(chunk, distances)
+        sorted_images = link_chunks(chunk, distances)
+        for image in sorted_images:
+            f.write(f'{image.get_output()}\n')
         # pprint(distances.distances)
 
     # m = get_max(distances)
@@ -171,4 +173,6 @@ def main():
 
 
 if __name__ == "__main__":
+
+    assert len(sys.argv) > 1
     main()
