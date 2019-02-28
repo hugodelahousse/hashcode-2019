@@ -73,22 +73,25 @@ def tags_distance(a, b):
 
 class Distances:
     def __init__(self, size):
+        self.size = size
         self.distances = np.zeros((size, size), dtype=np.int8)
 
     def get_distance(self, i, j):
-        return self.distances[i][j]
+        return self.distances[i, j]
 
     def add_distance(self, i, j, d):
-        self.distances[i][j] = d;
-        self.distances[j][i] = d;
+        self.distances[i, j] = d;
+        self.distances[j, i] = d;
 
     def get_max_distance(self):
         max_pos = np.unravel_index(np.argmax(self.distances, axis=None), self.distances.shape)
         return max_pos
 
     def remove_couple(self, i, j):
-        self.distances[:,i] = -1
-        self.distances[:j,] = -1
+        self.distances[i].fill(-1)
+        self.distances[:,j] = -1
+        self.distances[i, j] = -1
+        self.distances[j, i] = -1
 
 def compute_distances(images):
     distances = Distances(len(images))
@@ -101,12 +104,12 @@ def compute_distances(images):
 
 def link_chunks(chunk, distances):
     sorted_images = []
-
-    pos = distances.get_max_distance()
-
-
-    print(pos, distances.get_distance(pos[0], pos[1]))
-
+    print('New chunk')
+    for i in range(len(chunk) - 1):
+        # print(distances.distances)
+        pos = distances.get_max_distance()
+        print(pos, distances.get_distance(*pos))
+        distances.remove_couple(*pos)
 
 
 def main():
@@ -125,6 +128,9 @@ def main():
 
     print(len(images))
     print(chunk_count, chunk_size)
+    if chunk_size == 0:
+        chunk_size = len(images)
+        chunk_count = 1
     chunks = [images[i: i + chunk_size] for i in range(0, len(images), chunk_size)]
 
     assert(len(images) == sum(len(chunk) for chunk in chunks))
