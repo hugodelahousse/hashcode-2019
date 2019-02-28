@@ -10,19 +10,29 @@ def parse():
     count = int(lines[0])
     lines = lines[1:]
 
+    portraits = []
     photos = []
 
     for i, line in enumerate(lines):
         data = line.split(' ')
 
-        photos.append(
-            Photo(
-                i,
-                data[0] == 'V',
-                set(map(tag_transform, data[2:])),
+        if data[0] == 'V':
+            portraits.append(
+                Photo(
+                    i,
+                    data[0] == 'V',
+                    set(map(tag_transform, data[2:])),
+                )
             )
-        )
-    return photos
+        else:
+            photos.append(
+                Photo(
+                    i,
+                    data[0] == 'V',
+                    set(map(tag_transform, data[2:])),
+                )
+            )
+    return photos, portraits
 
 
 
@@ -94,7 +104,10 @@ def link_chunks(chunk, distances):
 def main():
     chunk_count = 23
 
-    images = parse()
+    images, portraits = parse()
+
+    portraits.sort(key=lambda p: len(p.tags))
+
     # shuffle(images)
     chunk_size = len(images) // chunk_count
 
