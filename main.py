@@ -56,28 +56,15 @@ def tags_distance(a, b):
 
 class Distances:
     def __init__(self, size):
-        self.distances = [[0 for i in range(size)] for i in range(size)]
+        self.distances = np.zeros((size, size), dtype=np.uint8)
 
     def add_distance(self, i, j, d):
         self.distances[i][j] = d;
         self.distances[j][i] = d;
 
-    def get_distance(self, i, j):
-        return self.distances[i][j]
-
     def get_max_distance(self):
-        l = len(self.distances)
-        max_pos = (0, 0)
-        for i in range(l):
-            for j in range(l):
-                if self.get_distance(max_pos[0], max_pos[1]) < \
-                    self.get_distance(i, j):
-                    max_pos = (i, j)
-
+        max_pos = np.unravel_index(np.argmax(self.distances, axis=None), self.distances.shape)
         return max_pos
-
-
-
 
 def compute_distances(images):
     distances = Distances(len(images))
@@ -102,7 +89,7 @@ def main():
     chunk_size = len(images) // chunk_count
 
     print(chunk_count, chunk_size)
-    chunks = [images[i: i + chunk_size] for i in range(len(images), step=chunk_size)]
+    chunks = [images[i: i + chunk_size] for i in range(0, len(images), chunk_size)]
 
 
     print('Computing distances')
