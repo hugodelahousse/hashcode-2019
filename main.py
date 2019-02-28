@@ -114,7 +114,11 @@ def main():
 
     images, portraits = parse()
 
-    portraits.sort(key=lambda p: len(p.tags))
+    portraits.sort(reverse=True, key=lambda p: len(p.tags))
+
+    for i in range(0, len(portraits), 2):
+        images.append(Photo((portraits[i].index, portraits[i+1].index), True,
+            (portraits[i].data, portraits[i+1].data)))
 
     # shuffle(images)
     chunk_size = len(images) // chunk_count
