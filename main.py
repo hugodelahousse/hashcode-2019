@@ -108,9 +108,19 @@ def link_chunks(chunk, distances):
     for i in range(len(chunk) - 1):
         # print(distances.distances)
         pos = distances.get_max_distance()
+        sorted_images.append(pos)
         print(pos, distances.get_distance(*pos))
         distances.remove_couple(*pos)
 
+    mark = {i for i in range(len(chunk))}
+    
+    for i in range(len(sorted_images)):
+        mark.remove(sorted_images[i][1])
+
+    assert len(mark) == 1
+
+
+    
 
 def main():
     chunk_count = 23
