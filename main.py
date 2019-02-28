@@ -95,7 +95,7 @@ def link_chunks(chunk, distances):
 
 
 def main():
-    chunk_count = 20
+    chunk_count = 23
 
     images = parse()
     # shuffle(images)
@@ -104,6 +104,7 @@ def main():
     print(chunk_count, chunk_size)
     chunks = [images[i: i + chunk_size] for i in range(0, len(images), chunk_size)]
 
+    assert(len(images) == sum(len(chunk) for chunk in chunks))
 
     print('Computing distances')
     for chunk in tqdm(chunks):
