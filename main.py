@@ -12,11 +12,12 @@ def parse():
 
     photos = []
 
-    for line in lines:
+    for i, line in enumerate(lines):
         data = line.split(' ')
 
         photos.append(
             Photo(
+                i,
                 data[0] == 'V',
                 set(map(tag_transform, data[2:])),
             )
@@ -27,7 +28,8 @@ def parse():
 
 
 class Photo:
-    def __init__(self, portrait, tags):
+    def __init__(self, index, portrait, tags):
+        self.index = index
         self.portrait = portrait
         self.tags = tags
 
@@ -76,13 +78,21 @@ def compute_distances(images):
     return distances
 
 def link_chunks(chunk, distances):
+    sorted_images = []
+
+    for i in range(len(chunk)):
+        pass
+
     pos = distances.get_max_distance()
+
+
+
     print(pos, distances.get_distance(pos[0], pos[1]))
 
 
 
 def main():
-    chunk_count = 20
+    chunk_count = 23
 
     images = parse()
     # shuffle(images)
@@ -91,10 +101,12 @@ def main():
     print(chunk_count, chunk_size)
     chunks = [images[i: i + chunk_size] for i in range(0, len(images), chunk_size)]
 
+    assert(len(images) == sum(len(chunk) for chunk in chunks))
 
     print('Computing distances')
     for chunk in tqdm(chunks):
         distances = compute_distances(chunk)
+        link_chunks(chunk, distances)
         # pprint(distances.distances)
 
     # m = get_max(distances)
