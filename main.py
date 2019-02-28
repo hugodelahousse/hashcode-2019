@@ -46,6 +46,11 @@ class Photo:
     def __repr__(self):
         return f'<Photo {self.portrait} [{self.tags}]>'
 
+    def get_output(self):
+        if isinstance(self.index, int):
+            return self.index
+        return f'{self.index[0]} {self.index[1]}'
+
 
 TAGS = {}
 def tag_transform(tag):
