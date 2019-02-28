@@ -102,12 +102,13 @@ def main():
     chunk_size = len(images) // chunk_count
 
     print(chunk_count, chunk_size)
-    chunks = [images[i: i + chunk_size] for i in range(len(images), step=chunk_size)]
+    chunks = [images[i: i + chunk_size] for i in range(0, len(images), chunk_size)]
 
 
     print('Computing distances')
     for chunk in tqdm(chunks):
         distances = compute_distances(chunk)
+        link_chunks(chunk, distances)
         # pprint(distances.distances)
 
     # m = get_max(distances)
