@@ -12,11 +12,12 @@ def parse():
 
     photos = []
 
-    for line in lines:
+    for i, line in enumerate(lines):
         data = line.split(' ')
 
         photos.append(
             Photo(
+                i,
                 data[0] == 'V',
                 set(map(tag_transform, data[2:])),
             )
@@ -27,7 +28,8 @@ def parse():
 
 
 class Photo:
-    def __init__(self, portrait, tags):
+    def __init__(self, index, portrait, tags):
+        self.index = index
         self.portrait = portrait
         self.tags = tags
 
@@ -89,7 +91,15 @@ def compute_distances(images):
     return distances
 
 def link_chunks(chunk, distances):
+    sorted_images = []
+
+    for i in range(len(chunk)):
+        pass
+
     pos = distances.get_max_distance()
+
+
+
     print(pos, distances.get_distance(pos[0], pos[1]))
 
 
