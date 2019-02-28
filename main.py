@@ -55,29 +55,44 @@ def tags_distance(a, b):
 
 
 class Distances:
-    distances = {}
+    def __init__(self, size):
+        self.distances = [[0 for i in range(size)] for i in range(size)]
 
     def add_distance(self, i, j, d):
-        if not i < j:
-            return self.add_distance(j, i, d)
-        if not d:
-            return
-        self.distances[(i, j)] = d
+        self.distances[i][j] = d;
+        self.distances[j][i] = d;
 
     def get_distance(self, i, j):
-        if not i < j:
-            return self.get_distance(j, i)
-        return self.distances.get((i, j))
+        return self.distances[i][j]
+
+    def get_max_distance(self):
+        l = len(self.distances)
+        max_pos = (0, 0)
+        for i in range(l):
+            for j in range(l):
+                if self.get_distance(max_pos[0], max_pos[1]) < \
+                    self.get_distance(i, j):
+                    max_pos = (i, j)
+
+        return max_pos
+
+
 
 
 def compute_distances(images):
-    distances = Distances()
+    distances = Distances(len(images))
     for i, a in enumerate(images):
         for j, b in enumerate(images[i + 1:], start=i + 1):
             distance = tags_distance(a.tags, b.tags)
             distances.add_distance(i, j, distance)
 
     return distances
+
+def link_chunks(chunk, distances):
+    pos = distances.get_max_distance()
+    print(pos, distances.get_distance(pos[0], pos[1]))
+
+
 
 def main():
     chunk_count = 20
