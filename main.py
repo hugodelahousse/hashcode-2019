@@ -118,9 +118,24 @@ def link_chunks(chunk, distances):
         mark.remove(sorted_images[i][1])
 
     assert len(mark) == 1
+    entry_point, = mark
 
-
+    pos_in = {a: i for i, (a,b) in enumerate(sorted_images)}
+    pos_dest = {b: i for i, (a,b) in enumerate(sorted_images)}
     
+    res = []
+    res.append(entry_point)
+    for i in range(len(sorted_images)):
+        try:
+            entry_point = sorted_images[pos_in[entry_point]][1]
+            res.append(entry_point)
+        except KeyError:
+            break
+
+    print(len(res), 'len')
+    print(res)
+
+    return res
 
 def main():
     chunk_count = 23
