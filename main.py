@@ -118,7 +118,7 @@ def main():
 
     for i in range(0, len(portraits), 2):
         images.append(Photo((portraits[i].index, portraits[i+1].index), True,
-            (portraits[i].data, portraits[i+1].data)))
+            portraits[i].data + portraits[i+1].data))
 
     shuffle(images)
     chunk_size = len(images) // chunk_count
